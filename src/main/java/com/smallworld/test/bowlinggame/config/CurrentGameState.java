@@ -23,7 +23,8 @@ package com.smallworld.test.bowlinggame.config;
  * @version 1.0 - 2022-08-03 19:09
  */
 public enum CurrentGameState {
-    NORMAL,   //   Nothing extra to add in next frame.
-    SPARE,    //   Waiting for next frame to add ten point plus next throw.
-    STRIKE;   //   Waiting for next frame to add ten point plus next two throws.
+    NORMAL,         //   Nothing extra to add in next frame.
+    SPARE,          //   Waiting for next frame to add ten point plus next throw.
+    STRIKE,         //   Waiting for next frame to add ten point plus next two throws.
+    UNUSED;         //   FRAME NOT PLAYED YET.
 }

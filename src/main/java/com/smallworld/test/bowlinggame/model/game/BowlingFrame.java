@@ -45,5 +45,5 @@ public class BowlingFrame {
     int secondThrow             = 0;
     int extraPoints             = 0;
 //    int extraThrowsCount    = 0;
-    CurrentGameState frameState = CurrentGameState.NORMAL;
+    CurrentGameState frameState = CurrentGameState.UNUSED;
 }

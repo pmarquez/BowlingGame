@@ -56,8 +56,6 @@ public class BowlingGameState {
     public static int                   firstExtraThrowCount    = ZERO;
     public static int                   secondExtraThrowCount   = ZERO;
 
-    public static int                   currentScore            = ZERO;
-
     public static BowlingFrame          frames [ ] = new BowlingFrame [ ] { new BowlingFrame ( ),
                                                                             new BowlingFrame ( ),
                                                                             new BowlingFrame ( ),
