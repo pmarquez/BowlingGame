@@ -4,10 +4,8 @@ package com.smallworld.test.bowlinggame.web.controller;
 
 
 //   Third Party Libraries Imports
-import com.smallworld.test.bowlinggame.model.game.BowlingThrow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,7 @@ import javax.validation.Valid;
 
 //   Domain Imports
 import com.smallworld.test.bowlinggame.service.BowlingGame;
+import com.smallworld.test.bowlinggame.model.game.BowlingThrow;
 
 
 /**
@@ -59,11 +58,15 @@ public class BowlingGameRestController {
     @PostMapping( { "" } )
     public ResponseEntity<Void> postThrow ( @Valid @RequestBody BowlingThrow numberOfPins ) {
 
-        bowlingGameService.roll ( numberOfPins.getNumPinsInThrow ( ) );
-        HttpHeaders headers = new HttpHeaders ( );
+        try {
+            bowlingGameService.roll(numberOfPins.getNumPinsInThrow());
+            return new ResponseEntity<> ( HttpStatus.CREATED );
 
+        } catch ( RuntimeException ex ) {
+            log.info ( ex.getMessage ( ) );
+            return new ResponseEntity<> ( HttpStatus.BAD_REQUEST );
 
-        return new ResponseEntity<> ( HttpStatus.OK );
+        }
 
     }
 

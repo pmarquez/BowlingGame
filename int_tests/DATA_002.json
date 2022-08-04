@@ -1,0 +1,37 @@
+[ 
+  { "numPins": 9 },
+  { "numPins": 1 },
+
+  { "numPins": 10 },
+
+  { "numPins": 9 },
+  { "numPins": 7 },
+  { "numPins": 1 },
+
+  { "numPins": 7 },
+  { "numPins": 3 },
+
+  { "numPins": 1 },
+  { "numPins": 9 },
+
+  { "numPins": 14 },
+
+  { "numPins": -1 },
+  { "numPins": 0 },
+  { "numPins": 10 },
+
+  { "numPins": 6 },
+  { "numPins": 4 },
+
+  { "numPins": 6 },
+  { "numPins": 3 },
+
+  { "numPins": 3 },
+  { "numPins": 3 },
+
+  { "numPins": 8 },
+  { "numPins": 2 },
+
+  { "numPins": 9 },
+  { "numPins": 1 } 
+]

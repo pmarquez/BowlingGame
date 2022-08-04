@@ -3,16 +3,16 @@ package com.smallworld.test.bowlinggame.service;
 //   Standard Libraries Imports
 
 //   Third Party Libraries Imports
-import com.smallworld.test.bowlinggame.config.CurrentGameState;
-import com.smallworld.test.bowlinggame.config.CurrentThrow;
-import com.smallworld.test.bowlinggame.model.game.BowlingFrame;
-import com.smallworld.test.bowlinggame.model.game.BowlingGameState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 //   commons Imports
 
 //   Domain Imports
+import com.smallworld.test.bowlinggame.config.CurrentGameState;
+import com.smallworld.test.bowlinggame.config.CurrentThrow;
+import com.smallworld.test.bowlinggame.model.game.BowlingFrame;
+import com.smallworld.test.bowlinggame.model.game.BowlingGameState;
 
 
 /**
@@ -49,30 +49,27 @@ public class BowlingGame implements BowlingGameIntf {
     @Override
     public void roll ( int pinCount ) throws RuntimeException {
 
-        this.decideIfGameIsOver ( );
+        BowlingGame.decideIfGameIsOver ( );
 
         boolean isFirstThrow = BowlingGameState.currentThrow == CurrentThrow.FIRST_THROW;
 
         if ( !BowlingGameState.gameOver ) {
 
             if ( BowlingGameState.gameState == CurrentGameState.NORMAL ) {
-                log.info ( "NORMAL" );
-                this.handleNormalScenario ( isFirstThrow, pinCount );
+                BowlingGame.handleNormalScenario ( isFirstThrow, pinCount );
 
             } else if (BowlingGameState.gameState == CurrentGameState.SPARE ) {
-                log.info ( "SPARE" );
-                this.handleSpareScenario ( isFirstThrow, pinCount );
+                BowlingGame.handleSpareScenario ( isFirstThrow, pinCount );
 
             } else if ( BowlingGameState.gameState == CurrentGameState.STRIKE ) {
-                log.info ( "STRIKE" );
-                this.handleStrikeScenario ( isFirstThrow, pinCount );
+                BowlingGame.handleStrikeScenario ( isFirstThrow, pinCount );
 
             }
 
             this.handleSpareExtraPoints ( );
             this.handleStrikeExtraPoints ( );
 
-            log.info ( ( BowlingGameState.gameState == CurrentGameState.NORMAL ) ? "NORMAL" : ( BowlingGameState.gameState == CurrentGameState.SPARE ) ? "SPARE" : "STRIKE" );
+            log.info ( BowlingGameState.gameState.toString ( ) );
             log.info ( "Current Frame: " + BowlingGameState.currentFrame );
             this.dumpScoreBoard ( );
 
@@ -83,12 +80,15 @@ public class BowlingGame implements BowlingGameIntf {
 
     }
 
-    private void decideIfGameIsOver ( ) {
+    /**
+     * Checks for the END-OF-GAME condition.
+     */
+    private static void decideIfGameIsOver ( ) {
 
         boolean isGamOver = false;
 
         isGamOver = ( ( BowlingGameState.currentFrame >= BowlingGameState.NUM_FRAMES_PER_GAME ) &&
-                    ( BowlingGameState.frames [ BowlingGameState.NUM_FRAMES_PER_GAME - 1 ].getFrameState ( ) == CurrentGameState.NORMAL ) );
+                      ( BowlingGameState.frames [ BowlingGameState.NUM_FRAMES_PER_GAME - 1 ].getFrameState ( ) == CurrentGameState.NORMAL ) );
 
         BowlingGameState.gameOver = isGamOver;
     }
@@ -122,16 +122,16 @@ public class BowlingGame implements BowlingGameIntf {
             System.out.print ( "          (" + i + ") " + BowlingGameState.frames [ i ].getFirstThrow ( ) );
             System.out.print ( "-" + BowlingGameState.frames [ i ].getSecondThrow ( ) );
             System.out.print ( "-" + BowlingGameState.frames [ i ].getExtraPoints ( ) + " x:" );
-            System.out.println ( ( BowlingGameState.frames [ i ].getFrameState ( ) == CurrentGameState.NORMAL ) ? "NORMAL" : ( BowlingGameState.frames [ i ].getFrameState ( ) == CurrentGameState.SPARE ) ? "SPARE" : ( BowlingGameState.frames [ i ].getFrameState ( ) == CurrentGameState.UNUSED ) ? "UNUSED" : "STRIKE" );
-
+            System.out.println ( BowlingGameState.frames [ i ].getFrameState ( ).toString ( ) );
         }
+
     }
 
     /**
      * Handles the NORMAL state of a game.
      * @param pinCount
      */
-    private void handleNormalScenario ( boolean firstThrow, int pinCount ) {
+    private static void handleNormalScenario ( boolean firstThrow, int pinCount ) {
 
         if ( firstThrow ) {
 
@@ -141,7 +141,7 @@ public class BowlingGame implements BowlingGameIntf {
                 BowlingGameState.currentThrow = CurrentThrow.SECOND_THROW;
 
             } else {
-                this.setStrikeState ( pinCount );
+                BowlingGame.setStrikeState ( pinCount );
 
             }
 
@@ -156,10 +156,10 @@ public class BowlingGame implements BowlingGameIntf {
                 BowlingGameState.currentThrow = CurrentThrow.FIRST_THROW;
 
             } else if ( frameRunningTotal == 10 ) {
-                this.setSpareState ( pinCount );
+                BowlingGame.setSpareState ( pinCount );
 
             } else {
-                throw new RuntimeException ( );
+                throw new RuntimeException ( "Total pins in a frame cannot be more than 10." );
 
             }
         }
@@ -174,7 +174,7 @@ public class BowlingGame implements BowlingGameIntf {
      * Handles the SPARE state of a game.
      * @param pinCount
      */
-    private void handleSpareScenario ( boolean firstThrow, int pinCount ) {
+    private static void handleSpareScenario ( boolean firstThrow, int pinCount ) {
 
         if ( firstThrow ) {
             if ( pinCount < 10 ) {
@@ -184,11 +184,9 @@ public class BowlingGame implements BowlingGameIntf {
                 BowlingGameState.currentThrow = CurrentThrow.SECOND_THROW;
 
             } else {
-                this.setStrikeState ( pinCount );
+                BowlingGame.setStrikeState ( pinCount );
 
             }
-
-            //this.handleSpareExtraPoints ( );
 
         }
 
@@ -198,9 +196,6 @@ public class BowlingGame implements BowlingGameIntf {
      * Handles the addition of the extra points from SPAREs
      */
     private void handleSpareExtraPoints ( ) {
-
-        log.info ( "enter handleSpareExtraPoints" );
-
         for ( int i = 0; i < BowlingGameState.frames.length - 1; i++ ) {
             if ( BowlingGameState.frames [ i ].getFrameState ( ) == CurrentGameState.SPARE ) {
                 this.processSpareExtraPoints ( i );
@@ -224,7 +219,7 @@ public class BowlingGame implements BowlingGameIntf {
      * Sets the SPARE STATE
      * @param pinCount
      */
-    private void setSpareState ( int pinCount ) {
+    private static void setSpareState ( int pinCount ) {
         BowlingGameState.gameState = CurrentGameState.SPARE;
         BowlingGameState.frames [ BowlingGameState.currentFrame ].setSecondThrow ( pinCount );
         BowlingGameState.frames [ BowlingGameState.currentFrame ].setFrameState ( CurrentGameState.SPARE );
@@ -243,7 +238,7 @@ public class BowlingGame implements BowlingGameIntf {
      * Handles the STRIKE state of a game.
      * @param pinCount
      */
-    private void handleStrikeScenario ( boolean firstThrow, int pinCount ) {
+    private static void handleStrikeScenario ( boolean firstThrow, int pinCount ) {
 
         if ( firstThrow ) {
             if ( pinCount < 10 ) {
@@ -252,11 +247,10 @@ public class BowlingGame implements BowlingGameIntf {
                 BowlingGameState.currentThrow = CurrentThrow.SECOND_THROW;
 
             } else {
-                this.setStrikeState ( pinCount );
+                BowlingGame.setStrikeState ( pinCount );
 
             }
 
-//            this.handleStrikeExtraPoints ( );
         }
 
     }
@@ -281,14 +275,10 @@ public class BowlingGame implements BowlingGameIntf {
         BowlingFrame twoUpFrame   = BowlingGameState.frames [ i + 2 ];
 
         if ( ( oneUpFrame.getFrameState ( ) == CurrentGameState.NORMAL ) || ( oneUpFrame.getFrameState ( ) == CurrentGameState.SPARE ) ) {
-            log.info ( "enter handleStrikeExtraPoints NORMAL || SPARE" );
-
             currentFrame.setExtraPoints ( oneUpFrame.getFirstThrow ( ) + oneUpFrame.getSecondThrow ( ) );
             currentFrame.setFrameState ( CurrentGameState.NORMAL );
 
         } else if ( ( oneUpFrame.getFrameState ( ) == CurrentGameState.STRIKE ) && ( twoUpFrame.getFrameState ( ) != CurrentGameState.UNUSED ) ) {
-            log.info ( "enter handleStrikeExtraPoints STRIKE && !UNUSED" );
-
             currentFrame.setExtraPoints ( oneUpFrame.getFirstThrow ( ) + twoUpFrame.getFirstThrow ( ) );
             currentFrame.setFrameState ( CurrentGameState.NORMAL );
 
@@ -300,7 +290,7 @@ public class BowlingGame implements BowlingGameIntf {
      * Sets the STRIKE STATE
      * @param pinCount
      */
-    private void setStrikeState ( int pinCount ) {
+    private static void setStrikeState ( int pinCount ) {
         BowlingGameState.gameState = CurrentGameState.STRIKE;
         BowlingGameState.frames [ BowlingGameState.currentFrame ].setFirstThrow ( pinCount );
         BowlingGameState.frames [ BowlingGameState.currentFrame ].setFrameState ( CurrentGameState.STRIKE );

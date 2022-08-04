@@ -3,16 +3,14 @@ package com.smallworld.test.bowlinggame.model.game;
 //   Standard Libraries Imports
 
 //   Third Party Libraries Imports
-import com.smallworld.test.bowlinggame.config.CurrentGameState;
 import lombok.extern.slf4j.Slf4j;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 //   ns Framework Imports
 
 //   Domain Imports
+import com.smallworld.test.bowlinggame.config.CurrentGameState;
 
 
 /**
@@ -44,6 +42,5 @@ public class BowlingFrame {
     int firstThrow              = 0;
     int secondThrow             = 0;
     int extraPoints             = 0;
-//    int extraThrowsCount    = 0;
     CurrentGameState frameState = CurrentGameState.UNUSED;
 }

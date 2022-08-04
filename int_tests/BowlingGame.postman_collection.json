@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "907662e7-0f52-49a6-8c5e-7402f80b3184",
+		"name": "BowlingGame",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8402348"
+	},
+	"item": [
+		{
+			"name": "Record a Throw in a Game of Bowling",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"numPinsInThrow\":{{numPins}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bowlingGameAPI/1.0/games",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bowlingGameAPI",
+						"1.0",
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieves the score of a game of bowing",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bowlingGameAPI/1.0/games",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bowlingGameAPI",
+						"1.0",
+						"games"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
