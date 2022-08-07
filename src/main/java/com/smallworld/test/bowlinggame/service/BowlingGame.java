@@ -13,6 +13,7 @@ import com.smallworld.test.bowlinggame.config.CurrentGameState;
 import com.smallworld.test.bowlinggame.config.CurrentThrow;
 import com.smallworld.test.bowlinggame.model.game.BowlingFrame;
 import com.smallworld.test.bowlinggame.model.game.BowlingGameState;
+import com.smallworld.test.bowlinggame.exception.FrameScoreOutOfBoundsException;
 
 
 /**
@@ -41,13 +42,15 @@ import com.smallworld.test.bowlinggame.model.game.BowlingGameState;
 @Service
 public class BowlingGame implements BowlingGameIntf {
 
+    private static final String FRAME_OUT_OF_BOUNDS = "Total pins in a frame cannot be more than " + BowlingGameState.MAX_PINS_PER_FRAME + ".";
+
     /**
      * Receives the number of pins knocked down in a throw.
      *
      * @param pinCount
      */
     @Override
-    public void roll ( int pinCount ) throws RuntimeException {
+    public void roll ( int pinCount ) throws FrameScoreOutOfBoundsException {
 
         BowlingGame.decideIfGameIsOver ( );
 
@@ -119,10 +122,13 @@ public class BowlingGame implements BowlingGameIntf {
      */
     private void dumpScoreBoard ( ) {
         for ( int i = 0; i < BowlingGameState.frames.length; i++ ) {
-            System.out.print ( "          (" + i + ") " + BowlingGameState.frames [ i ].getFirstThrow ( ) );
-            System.out.print ( "-" + BowlingGameState.frames [ i ].getSecondThrow ( ) );
-            System.out.print ( "-" + BowlingGameState.frames [ i ].getExtraPoints ( ) + " x:" );
-            System.out.println ( BowlingGameState.frames [ i ].getFrameState ( ).toString ( ) );
+
+            String logLine = "          (" + i + ") " + BowlingGameState.frames [ i ].getFirstThrow ( ) +
+                             "-" + BowlingGameState.frames [ i ].getSecondThrow ( ) +
+                             "-" + BowlingGameState.frames [ i ].getExtraPoints ( ) + " EXTRAS:" +
+                             BowlingGameState.frames [ i ].getFrameState ( ).toString ( );
+
+            log.info ( logLine );
         }
 
     }
@@ -131,11 +137,11 @@ public class BowlingGame implements BowlingGameIntf {
      * Handles the NORMAL state of a game.
      * @param pinCount
      */
-    private static void handleNormalScenario ( boolean firstThrow, int pinCount ) {
+    private static void handleNormalScenario ( boolean firstThrow, int pinCount ) throws FrameScoreOutOfBoundsException {
 
         if ( firstThrow ) {
 
-            if ( pinCount < 10 ) {
+            if ( pinCount < BowlingGameState.MAX_PINS_PER_FRAME ) {
                 BowlingGameState.gameState = CurrentGameState.NORMAL;
                 BowlingGameState.frames [ BowlingGameState.currentFrame ].setFirstThrow ( pinCount );
                 BowlingGameState.currentThrow = CurrentThrow.SECOND_THROW;
@@ -148,23 +154,26 @@ public class BowlingGame implements BowlingGameIntf {
         } else {
             int frameRunningTotal = pinCount + BowlingGameState.frames [ BowlingGameState.currentFrame ].getFirstThrow ( );
 
-            if ( frameRunningTotal < 10 ) {
+            if ( frameRunningTotal < BowlingGameState.MAX_PINS_PER_FRAME ) {
                 BowlingGameState.gameState = CurrentGameState.NORMAL;
                 BowlingGameState.frames [ BowlingGameState.currentFrame ].setSecondThrow ( pinCount );
                 BowlingGameState.frames [ BowlingGameState.currentFrame ].setFrameState ( CurrentGameState.NORMAL );
                 BowlingGameState.currentFrame++;
                 BowlingGameState.currentThrow = CurrentThrow.FIRST_THROW;
 
-            } else if ( frameRunningTotal == 10 ) {
+            } else if ( frameRunningTotal == BowlingGameState.MAX_PINS_PER_FRAME ) {
                 BowlingGame.setSpareState ( pinCount );
 
             } else {
-                throw new RuntimeException ( "Total pins in a frame cannot be more than 10." );
+                throw new FrameScoreOutOfBoundsException ( FRAME_OUT_OF_BOUNDS );
 
             }
         }
 
     }
+
+
+
 
     //   EVERYTHING SPARE-RELATED
     //   EVERYTHING SPARE-RELATED
@@ -177,7 +186,7 @@ public class BowlingGame implements BowlingGameIntf {
     private static void handleSpareScenario ( boolean firstThrow, int pinCount ) {
 
         if ( firstThrow ) {
-            if ( pinCount < 10 ) {
+            if ( pinCount < BowlingGameState.MAX_PINS_PER_FRAME ) {
                 //   set NORMAL state
                 BowlingGameState.gameState = CurrentGameState.NORMAL;
                 BowlingGameState.frames [ BowlingGameState.currentFrame ].setFirstThrow ( pinCount );
@@ -241,7 +250,7 @@ public class BowlingGame implements BowlingGameIntf {
     private static void handleStrikeScenario ( boolean firstThrow, int pinCount ) {
 
         if ( firstThrow ) {
-            if ( pinCount < 10 ) {
+            if ( pinCount < BowlingGameState.MAX_PINS_PER_FRAME ) {
                 BowlingGameState.gameState = CurrentGameState.NORMAL;
                 BowlingGameState.frames [ BowlingGameState.currentFrame ].setFirstThrow ( pinCount );
                 BowlingGameState.currentThrow = CurrentThrow.SECOND_THROW;

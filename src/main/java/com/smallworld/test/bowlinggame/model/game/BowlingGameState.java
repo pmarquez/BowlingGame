@@ -3,7 +3,6 @@ package com.smallworld.test.bowlinggame.model.game;
 //   Standard Libraries Imports
 
 //   Third Party Libraries Imports
-import com.smallworld.test.bowlinggame.config.CurrentThrow;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Data;
 
@@ -11,6 +10,7 @@ import lombok.Data;
 
 //   Domain Imports
 import com.smallworld.test.bowlinggame.config.CurrentGameState;
+import com.smallworld.test.bowlinggame.config.CurrentThrow;
 
 
 /**
@@ -38,9 +38,6 @@ import com.smallworld.test.bowlinggame.config.CurrentGameState;
 @Slf4j
 @Data
 public class BowlingGameState {
-    public static final int ZERO                = 0;
-    public static final int ONE                 = 1;
-    public static final int TWO                 = 2;
     public static final int FIRST_FRAME         = 0;   //   ZERO BASED, so [ 0..11 ]
     public static final int NUM_FRAMES_PER_GAME = 10;
     public static final int MAX_PINS_PER_FRAME  = 10;
@@ -49,15 +46,15 @@ public class BowlingGameState {
     public static int                   currentFrame            = FIRST_FRAME;
 
     public static CurrentThrow          currentThrow            = CurrentThrow.FIRST_THROW;
-    public static int                   firstThrowCount         = ZERO;
 
-    public static BowlingFrame [ ]          frames = new BowlingFrame [ ] { new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ),
-                                                                            new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ),
-                                                                            new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ) };
+    public static BowlingFrame [ ]      frames = new BowlingFrame [ ] { new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ),
+                                                                        new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ),
+                                                                        new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ), new BowlingFrame ( ) };
 
     public static CurrentGameState      gameState               = CurrentGameState.NORMAL;
 
     private BowlingGameState ( ) {
         throw new IllegalStateException ( "Utility class" );
     }
+
 }

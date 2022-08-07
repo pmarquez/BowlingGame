@@ -5,11 +5,11 @@ La prueba técnica trata de implementar en cualquier lenguaje una calculadora de
 
 Las reglas para puntuar una partida son las siguientes:
 
-    * Un jugador tiene 10 turnos
-    * Por cada turno el jugador tiene 2 tiradas
-    * Cada bolo derribado cuenta por 1 punto
-    * Cuando el jugador derriba los 10 bolos en la primera tirada de un turno consigue un "strike"
-    * La puntuación de un "strike" es 10 más el número de bolos derribados en las próximas 2 tiradas
+    * A player has 10 frames to play.
+    * For each frame, there are up to 2 throws.
+    * Each knocked-down pin is worth 1 point.
+    * When the player knocks down all 10 pins in the furst throw of a frame, the player achieves a "strike".
+    * The addition of a strike to the overall score is 10 plus the number of pins knocked-down in the next 2 throws.
     * Cuando un jugador consigue un "strike" no realiza la segunda tirada del turno y pasa directamente al siguiente turno
     * Cuando un jugador hace un "strike" en el último turno obtiene 2 tiradas adicionales para calcular los puntos del último turno
     * Cuando el jugador derriba los 10 bolos al final de un turno (usando las 2 tiradas) consigue un "spare"

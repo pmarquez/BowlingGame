@@ -1,13 +1,14 @@
 package com.smallworld.test.bowlinggame.model.game;
 
 //   Standard Libraries Imports
-
-//   Third Party Libraries Imports
-import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+//   Third Party Libraries Imports
+import lombok.Data;
 
 //   ns Framework Imports
 
@@ -43,6 +44,7 @@ public class BowlingThrow {
     @Id
     public Long id;
 
+    @NotNull ( message="Must supply a value." )
     @Max( value= 10, message="Value cannot be greater than 10")
     @Min( value = 0, message="Value cannot be lesser than 0" )
     private int numPinsInThrow;
