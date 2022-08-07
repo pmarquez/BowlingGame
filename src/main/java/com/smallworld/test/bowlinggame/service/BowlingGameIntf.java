@@ -7,6 +7,8 @@ package com.smallworld.test.bowlinggame.service;
 //   ns Framework Imports
 
 //   Domain Imports
+import com.smallworld.test.bowlinggame.exception.FrameScoreOutOfBoundsException;
+
 
 /**
  * BowlingGameIntf.java<br><br>
@@ -36,7 +38,7 @@ public interface BowlingGameIntf {
      * Receives the number of pins knocked down in a turn.
      * @param pinCount
      */
-    void roll ( int pinCount );
+    void roll ( int pinCount ) throws FrameScoreOutOfBoundsException;
 
     /**
      * Returns the score of the game.

@@ -17,6 +17,7 @@ import javax.validation.Valid;
 //   Domain Imports
 import com.smallworld.test.bowlinggame.service.BowlingGame;
 import com.smallworld.test.bowlinggame.model.game.BowlingThrow;
+import com.smallworld.test.bowlinggame.exception.FrameScoreOutOfBoundsException;
 
 
 /**
@@ -56,18 +57,9 @@ public class BowlingGameRestController {
      * @return
      */
     @PostMapping( { "" } )
-    public ResponseEntity<Void> postThrow ( @Valid @RequestBody BowlingThrow numberOfPins ) {
-
-        try {
-            bowlingGameService.roll(numberOfPins.getNumPinsInThrow());
+    public ResponseEntity<Void> postThrow ( @Valid @RequestBody BowlingThrow numberOfPins ) throws FrameScoreOutOfBoundsException {
+            bowlingGameService.roll(numberOfPins.getNumPinsInThrow ( ) );
             return new ResponseEntity<> ( HttpStatus.CREATED );
-
-        } catch ( RuntimeException ex ) {
-            log.info ( ex.getMessage ( ) );
-            return new ResponseEntity<> ( HttpStatus.BAD_REQUEST );
-
-        }
-
     }
 
     /**
